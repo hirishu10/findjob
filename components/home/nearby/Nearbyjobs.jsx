@@ -1,26 +1,21 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-} from "react-native";
+import React from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 
 import styles from "./nearbyjobs.style";
 import { useRouter } from "expo-router";
-import { COLORS, SIZES } from "../../../constants";
+import { COLORS } from "../../../constants";
 import NearbyJobCard from "../../common/cards/nearby/NearbyJobCard";
 import { useFetchHook } from "../../../hook/useFetchHook";
+import { rawDummyNearbyData } from "../../../utils/rawData";
 
 const Nearbyjobs = () => {
   const router = useRouter();
   const { data, isError, isLoading, reFetchData } = useFetchHook("search", {
-    query: "React Developer",
+    query: "React Native Developer",
     num_pages: 1,
   });
 
-  // console.log('data nearbyjobs', data)
+  const prefetchData = data?.length === 0 ? rawDummyNearbyData : data;
 
   return (
     <View style={styles.container}>
@@ -39,11 +34,18 @@ const Nearbyjobs = () => {
             Something went wrong
           </Text>
         ) : (
-          data?.map((job, index) => (
+          prefetchData?.map((job, index) => (
             <NearbyJobCard
               job={job}
               key={`nearby_job_${index}`}
-              handleNavigate={() => router.push(`/job-details/${job?.job_id}`)}
+              handleNavigate={() =>
+                router.push({
+                  pathname: `/job-details/${job.job_id}`,
+                  params: {
+                    preFetch: "nearby",
+                  },
+                })
+              }
             />
           ))
         )}

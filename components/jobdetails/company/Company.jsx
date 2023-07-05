@@ -9,9 +9,11 @@ const Company = ({ companyLogo, jobTitle, companyName, location }) => {
     <View style={styles.container}>
       <View style={styles.logoBox}>
         <Image
+          style={styles.logoImage}
           source={{
             uri: companyLogo,
           }}
+          resizeMode="contain"
         />
       </View>
 

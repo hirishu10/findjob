@@ -1,11 +1,12 @@
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   RefreshControl,
   SafeAreaView,
   ScrollView,
   Text,
+  ToastAndroid,
   View,
 } from "react-native";
 import { useFetchHook } from "../../hook/useFetchHook";
@@ -18,6 +19,7 @@ import {
   ScreenHeaderBtn,
   Specifics,
 } from "../../components";
+import { useRawDataHook } from "../../hook/useRawDataHook";
 
 const tabData = ["About", "Qualificaitons", "Responsibilities"];
 
@@ -29,42 +31,42 @@ const JobDetails = () => {
     "job-details",
     {
       job_id: params?.id,
-      //   job_id: "6t49jPd6o1IAAAAAAAAAAA==",
     }
   );
 
-  //   const { data, isError, isLoading, reFetchData } = useFetchHook(
-  //     "job-details",
-  //     { job_id: params?.id }
-  //   );
-
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState(tabData[0]);
+  const preFetchData =
+    data?.length === 0 ? useRawDataHook(params?.preFetch, params?.id) : data;
 
-  //   console.log("data per data", data);
-  //   console.log("data per data test", data?.data[0]?.employer_logo);
-  const onRefresh = () => {
-    // reFetchData();
-  };
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    reFetchData();
+    setRefreshing(false);
+  }, []);
 
   const displayTabContent = () => {
     switch (activeTab) {
       case "About":
         return (
-          <JobAbout info={data[0]?.job_description ?? "No data provided"} />
+          <JobAbout
+            info={preFetchData[0]?.job_description ?? "No data provided"}
+          />
         );
       case "Qualificaitons":
         return (
           <Specifics
             title="Qualificaitons"
-            points={data[0]?.job_highlights?.Qualifications ?? ["N/A"]}
+            points={preFetchData[0]?.job_highlights?.Qualifications ?? ["N/A"]}
           />
         );
       case "Responsibilities":
         return (
           <Specifics
             title="Responsibilities"
-            points={data[0]?.job_highlights?.Responsibilities ?? ["N/A"]}
+            points={
+              preFetchData[0]?.job_highlights?.Responsibilities ?? ["N/A"]
+            }
           />
         );
       default:
@@ -88,7 +90,16 @@ const JobDetails = () => {
             />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn iconUrl={icons.share} dimension={"60%"} />
+            <ScreenHeaderBtn
+              iconUrl={icons.share}
+              dimension={"60%"}
+              handlePress={() =>
+                ToastAndroid.show(
+                  `This job has been successfully shared!\n It's just a demo`,
+                  ToastAndroid.SHORT
+                )
+              }
+            />
           ),
           headerTitle: "",
         }}
@@ -113,10 +124,10 @@ const JobDetails = () => {
           ) : (
             <View style={{ padding: SIZES.medium, paddingBottom: 100 }}>
               <Company
-                companyLogo={data[0]?.employer_logo}
-                jobTitle={data[0]?.job_title}
-                companyName={data[0]?.employer_name}
-                location={data[0]?.job_country}
+                companyLogo={preFetchData[0]?.employer_logo}
+                jobTitle={preFetchData[0]?.job_title}
+                companyName={preFetchData[0]?.employer_name}
+                location={preFetchData[0]?.job_country}
               />
 
               <JobTabs

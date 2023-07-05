@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import { COLORS, SIZES } from "../../../constants";
 import PopularJobCard from "../../common/cards/popular/PopularJobCard";
 import { useFetchHook } from "../../../hook/useFetchHook";
+import { rawDummyPopularData } from "../../../utils/rawData";
 
 const Popularjobs = () => {
   const router = useRouter();
@@ -20,7 +21,18 @@ const Popularjobs = () => {
     num_pages: 1,
   });
 
-  // console.log("data populajobs", data);
+  const [selectedJob, setSelectedJob] = useState();
+
+  const handleCardPress = (item) => {
+    router.push({
+      pathname: `/job-details/${item.job_id}`,
+      params: {
+        preFetch: "popular",
+      },
+    });
+    setSelectedJob(item.job_id);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -39,11 +51,12 @@ const Popularjobs = () => {
           </Text>
         ) : (
           <FlatList
-            data={data}
+            data={data?.length === 0 ? rawDummyPopularData : data}
             renderItem={({ item }) => (
               <PopularJobCard
                 item={item}
-                // selectedJob={item?.item?.job_id}
+                selectedJob={selectedJob}
+                handleCardPress={() => handleCardPress(item)}
               />
             )}
             keyExtractor={({ item }) => item?.job_id}

@@ -16,7 +16,6 @@ const jobTypes = [
   "Comission",
   "Volunteer",
 ];
-// const jobTypes = ["Full-time", "Part-time", "Freelance"];
 
 const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
   const router = useRouter();
@@ -32,10 +31,8 @@ const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
         <View style={styles.searchWrapper}>
           <TextInput
             style={styles.searchInput}
-            // value=""
-            onChange={(text) => {
-              setSearchTerm(text);
-            }}
+            value={searchTerm}
+            onChangeText={(text) => setSearchTerm(text)}
             placeholder="What are you looking for?"
           />
         </View>

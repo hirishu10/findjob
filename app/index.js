@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import { View, Text, SafeAreaView, ScrollView } from "react-native";
+import { View, SafeAreaView, ScrollView, ToastAndroid } from "react-native";
 
 import {
   Nearbyjobs,
@@ -10,9 +10,12 @@ import {
 import { COLORS, FONT, SIZES, icons, images } from "../constants";
 import { useState } from "react";
 
+import ScreenHeaderIconBtn from "../components/common/header/ScreenHeaderIconBtn";
+
 const Home = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <SafeAreaView
@@ -21,18 +24,52 @@ const Home = () => {
         backgroundColor: COLORS.lightWhite,
       }}
     >
-      {/* <Text>Home</Text> */}
       <Stack.Screen
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
-          // headerShadowVisible: false,
           headerLeft: () => (
-            <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" />
+            <ScreenHeaderBtn
+              iconUrl={icons.menu}
+              dimension="60%"
+              handlePress={() => {
+                ToastAndroid.show(
+                  "App Drawer\n It's just a demo",
+                  ToastAndroid.SHORT
+                );
+              }}
+              extraStyle={{
+                marginRight: 10,
+              }}
+            />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" />
+            <View style={{ flexDirection: "row" }}>
+              <ScreenHeaderIconBtn
+                icon={darkMode ? "moon" : "sunny"}
+                color={"black"}
+                size={24}
+                handlePress={() => {
+                  setDarkMode(!darkMode);
+                  ToastAndroid.show(
+                    `${
+                      !darkMode
+                        ? "DarkMode enabled\n It's just a demo"
+                        : "LightMode enabled\n It's just a demo"
+                    }`,
+                    ToastAndroid.SHORT
+                  );
+                }}
+                extraStyle={{
+                  marginRight: 20,
+                }}
+              />
+              <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" />
+            </View>
           ),
-          headerTitle: "",
+          headerTitle: "findjob",
+          headerTitleStyle: {
+            fontFamily: FONT.medium,
+          },
         }}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -46,11 +83,9 @@ const Home = () => {
               }
             }}
           />
-
           {/*  */}
           <Popularjobs />
           {/*  */}
-
           <Nearbyjobs />
         </View>
       </ScrollView>
