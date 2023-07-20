@@ -54,6 +54,7 @@ const Popularjobs = () => {
             data={data?.length === 0 ? rawDummyPopularData : data}
             renderItem={({ item }) => (
               <PopularJobCard
+                key={item?.job_id}
                 item={item}
                 selectedJob={selectedJob}
                 handleCardPress={() => handleCardPress(item)}

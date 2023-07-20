@@ -20,6 +20,7 @@ const Tabs = ({ tabs, activeTab, setActiveTab }) => {
         data={tabs}
         renderItem={({ item }) => (
           <TabButton
+            key={item}
             name={item}
             activeTab={activeTab}
             onHandleSearchType={() => setActiveTab(item)}

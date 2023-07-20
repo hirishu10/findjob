@@ -5,6 +5,14 @@
       "bundler": "metro"
     },
     "name": "findjob",
-    "slug": "findjob"
+    "slug": "findjob",
+    "extra": {
+      "eas": {
+        "projectId": "a76132ab-3fa8-4937-be6e-5b18c14258bf"
+      }
+    },
+    "android": {
+      "package": "com.hirishu.findjob"
+    }
   }
 }

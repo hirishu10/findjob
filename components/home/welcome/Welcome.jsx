@@ -51,6 +51,7 @@ const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
           data={jobTypes}
           renderItem={({ item }) => (
             <TouchableOpacity
+              key={item}
               style={styles.tab(activeJobType, item)}
               onPress={() => {
                 setActiveJobType(item);
